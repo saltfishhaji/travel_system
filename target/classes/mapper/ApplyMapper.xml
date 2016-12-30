@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssmdemo.dao.ApplyDao">
+
+	<insert id="add" parameterType="apply">
+		insert into apply(userid,username,post,start,destiny,tovehicle,backvehicle,startdate,days,meal,hotel,computebudget,budget,applytime,employercheck) 
+		values(#{userid},#{username},#{post},#{start},#{destiny},#{tovehicle},#{backvehicle},#{startdate},#{days},#{meal},#{hotel},#{computebudget},#{budget},#{applytime},#{employercheck});
+	</insert>
+	
+	<resultMap type="Apply" id="applyMap">
+	<id column="applyid" property="applyid"/>
+	<result column="userid" property="userid"/>
+	<result column="username" property="username"/>
+	<result column="start" property="start"/>
+	<result column="destiny" property="destiny"/>
+	<result column="tovehicle" property="tovehicle"/>
+	<result column="backvehicle" property="backvehicle"/>
+	<result column="startdate" property="startdate"/>
+	<result column="days" property="days"/>
+	<result column="meal" property="meal"/>
+	<result column="applytime" property="applytime"/>
+	<result column="hotel" property="hotel"/>
+	<result column="budget" property="budget"/>
+	<result column="computebudget" property="computebudget"/>
+	<result column="employercheck" property="employercheck"/>
+	<result column="bosscheck" property="bosscheck"/>
+	</resultMap>
+	
+	<select id="findAll" parameterType="PageModel" resultMap="applyMap">
+		select * from apply
+		<where>
+	     and post>#{data}
+		</where>
+		<if test="username!=null and username!=''">
+			and apply.username like '%${username}%'
+		</if>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findAllCount" parameterType="PageModel" resultType="Integer">
+	   select count(*) from apply where post>#{data}
+	   <if test="username!=null and username!=''">
+			and apply.username like '%${username}%'
+		</if>
+	</select>
+	
+	<select id="findbyid" parameterType="PageModel" resultMap="applyMap">
+		select * from apply
+		<where>
+	     and userid=#{data}
+		</where>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findMyCount" parameterType="PageModel" resultType="Integer">
+	   select count(*) from apply where userid=#{data}
+	</select>
+	
+	<select id="findEmployerUncheck" parameterType="PageModel" resultType="com.ssmdemo.entity.Apply">
+		select * from apply
+		<where>
+	     and employercheck=0 and post=3
+		</where>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findECount" resultType="Integer">
+	   select count(*) from apply where employercheck=0 and post=3
+	</select>
+	
+	<select id="findunAccount" parameterType="PageModel" resultType="com.ssmdemo.entity.Apply">
+		select * from apply
+		<where>
+	     and ifaccount=1
+		</where>
+		<if test="username!=null and username!=''">
+			and apply.username like '%${username}%'
+		</if>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findUACount" resultType="Integer">
+	   select count(*) from apply where ifaccount=1
+	   <if test="username!=null and username!=''">
+			and apply.username like '%${username}%'
+		</if>
+	</select>
+	
+	<select id="findBossUncheck" parameterType="PageModel" resultMap="applyMap">
+		select * from apply
+		where bosscheck=0 
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findBCount" resultType="Integer">
+	   select count(*) from apply where bosscheck=0
+	</select>
+	
+	<update id="updateE" parameterType="Apply">
+		update apply set employercheck=#{employercheck}
+		where applyid=#{applyid}
+	</update>
+	
+	<update id="updateB" parameterType="Apply">
+		update apply set bosscheck=#{bosscheck}, ifaccount=1
+		where applyid=#{applyid}
+	</update>
+	
+	
+</mapper>

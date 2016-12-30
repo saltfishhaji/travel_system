@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssmdemo.dao.AccountDao">
+
+	<insert id="addAccount" parameterType="com.ssmdemo.entity.Account">
+		insert into account(applyid,userid,username,startdate,post,days,extrapay,totalbudget,budget,hotelpay,ticketpay,mealpay,adminmsg,savings)
+		values(#{applyid},#{userid},#{username},#{startdate},#{post},#{days},#{extrapay},#{totalbudget},#{budget},#{hotelpay},#{ticketpay},#{mealpay},#{adminmsg},#{savings});
+	</insert>
+	
+	<update id="updateApply" parameterType="Integer">
+		update apply set ifaccount=2
+		where applyid=#{applyid}
+	</update>
+	
+	<select id="findAll" parameterType="PageModel" resultType="com.ssmdemo.entity.Showaccount">
+		select apply.applyid,apply.userid,apply.username,apply.post,apply.start,apply.destiny,apply.tovehicle,apply.backvehicle,apply.startdate,account.days,account.extrapay,account.totalbudget,apply.budget,account.savings,account.adminmsg
+ 		from apply join account using(applyid)
+		<where>
+	     and apply.post>#{data}
+		</where>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findAllCount" parameterType="PageModel" resultType="Integer">
+	   select count(*) from apply join account using(applyid) where apply.post>#{data}
+	</select>
+	
+	<select id="findbyid" parameterType="PageModel" resultType="com.ssmdemo.entity.Showaccount">
+		select apply.applyid,apply.userid,apply.username,apply.post,apply.start,apply.destiny,apply.tovehicle,apply.backvehicle,apply.startdate,account.days,account.extrapay,account.totalbudget,apply.budget,account.savings,account.adminmsg
+ 		from apply join account using(applyid)
+		<where>
+	     and apply.userid=#{data}
+		</where>
+		limit #{pagestart},#{pagesize}
+	</select>
+	
+	<select id="findMyCount" parameterType="PageModel" resultType="Integer">
+	   select count(*) from apply join account using(applyid) where apply.userid=#{data}
+	</select>
+	
+	<select id="findAllmonth" parameterType="String" resultType="com.ssmdemo.entity.Graph">
+		select sum(totalbudget) as budget, sum(savings) as savings, #{month} as month
+		from account 
+		where date_format(startdate,'%Y-%m')=#{month}
+	</select>
+	
+	<select id="findMymonth" parameterType="Findmymonth" resultType="com.ssmdemo.entity.Graph">
+		select sum(totalbudget) as budget, sum(savings) as savings, #{month} as month
+		from account 
+		where date_format(startdate,'%Y-%m')=#{month} and userid=#{userid}
+	</select>
+	
+</mapper>

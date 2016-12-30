@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssmdemo.dao.CityDao">
+
+
+
+	<select id="getcity"  resultType="com.ssmdemo.entity.City">
+		select * from city c order by convert(c.cityname USING gbk) COLLATE gbk_chinese_ci
+	</select>
+	
+	<select id="getvehicle" resultType="com.ssmdemo.entity.Vehicle">
+		select * from vehicle order by convert(vehiclename USING gbk) COLLATE gbk_chinese_ci
+	</select>
+	
+</mapper>
